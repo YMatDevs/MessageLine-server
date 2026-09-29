@@ -1,0 +1,15 @@
+type: environment.insomnia.rest/5.0
+schema_version: "5.1"
+name: messageline-env
+meta:
+  id: wrk_8cfc36ad9f9a44b1b759260bf768cd16
+  created: 1790710813794
+  modified: 1790710813794
+  description: ""
+environments:
+  name: Base Environment
+  meta:
+    id: env_57117eac147bd240e5b45ca73814bc17ed535076
+    created: 1790710813811
+    modified: 1790710813811
+    isPrivate: false

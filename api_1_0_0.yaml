@@ -1,0 +1,55 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: API 1.0.0
+meta:
+  id: wrk_b77e430ef3f04eb6926649fa502afd16
+  created: 1790709311244
+  modified: 1790709311244
+  description: ""
+collection:
+  - name: Auth
+    meta:
+      id: fld_cfe1e9e320f648a2abe1e88149a69223
+      created: 1790710754441
+      modified: 1790710754441
+      sortKey: -1790710754441
+      description: ""
+  - name: Users
+    meta:
+      id: fld_bbb858131d84463a89956c043cfda4f3
+      created: 1790710772357
+      modified: 1790710772357
+      sortKey: -1790710772357
+      description: ""
+    children:
+      - url: ""
+        name: New Request
+        meta:
+          id: req_2a05abfa9470404dac4a572c5de688e9
+          created: 1790710777659
+          modified: 1790710793733
+          isPrivate: false
+          description: ""
+          sortKey: -1790710777659
+        method: GET
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_4596de26ccaafb5158259b61cf84f627a9f9b797
+    created: 1790709311250
+    modified: 1790709311250
+environments:
+  name: Base Environment
+  meta:
+    id: env_4596de26ccaafb5158259b61cf84f627a9f9b797
+    created: 1790709311249
+    modified: 1790709311249
+    isPrivate: false
