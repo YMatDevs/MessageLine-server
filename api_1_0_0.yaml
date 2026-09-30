@@ -22,12 +22,12 @@ collection:
       sortKey: -1790710772357
       description: ""
     children:
-      - url: ""
+      - url: /test
         name: New Request
         meta:
           id: req_2a05abfa9470404dac4a572c5de688e9
           created: 1790710777659
-          modified: 1790710793733
+          modified: 1790791946185
           isPrivate: false
           description: ""
           sortKey: -1790710777659
