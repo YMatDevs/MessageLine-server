@@ -40,6 +40,13 @@ collection:
             send: true
             store: true
           rebuildPath: true
+  - name: Chat
+    meta:
+      id: fld_daa77788134e4ada9fc96a240c407906
+      created: 1790793419764
+      modified: 1790793419764
+      sortKey: -1790793419764
+      description: ""
 cookieJar:
   name: Default Jar
   meta:
