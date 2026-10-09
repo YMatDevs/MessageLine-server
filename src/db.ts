@@ -7,4 +7,4 @@ if(!db_connection) throw new Error("Database connection string not defined");
 export const db = drizzle(db_connection);
 
 
-export * from '../schema/index.js';
+export * from './schema/index.js';
