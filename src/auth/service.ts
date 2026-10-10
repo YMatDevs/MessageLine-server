@@ -1,30 +1,42 @@
 import { safeParse } from "valibot";
 import { LoginSchema } from "./schema.js";
-import type { ServiceResponse } from "../utilities/types.js";
+import type { ServiceResponseInterface } from "../utilities/types.js";
 import { Codes } from "../utilities/constants.js";
-import { db } from "../db.js";
-import { userTable } from '../schema/users.js'
-import { eq } from "drizzle-orm";
 import { verifyPassword } from "../utilities/auth.js";
+import { get } from "../users/repository.js";
+import jwt from 'jsonwebtoken';
+import { ServiceResponse } from "../utilities/service.js";
 
 
-async function Login(userRequest: object): Promise<ServiceResponse>  {
+type LoginType = { token: string };
+
+async function Login(userRequest: object): Promise<ServiceResponseInterface<LoginType>>  {
 
     const credentials = safeParse(LoginSchema, userRequest);
 
-    if(!credentials.success) return { success: false,  status: Codes.BadRequest, message: null};
+    if(!credentials.success) return ServiceResponse<LoginType>({ status: Codes.BadRequest }) 
 
     const userCredentials = credentials.output;
 
-    const [user] = await db.select().from(userTable).where(eq(userTable.email, userCredentials.email))
+    const [user] = await get.byEmail(userCredentials.email);
 
-    if(!user) return { success: false,  status: Codes.Unauthorized, message: null};
-
-    const isPasswordCorrect = verifyPassword(userCredentials.password,user.password);
+    if(!user) return ServiceResponse<LoginType>({ status: Codes.Unauthorized });
     
-    if(!isPasswordCorrect) return { success: false,  status: Codes.Unauthorized, message: null};
-
+    const isPasswordCorrect = await verifyPassword(userCredentials.password,user.password);
     
+    if(!isPasswordCorrect) return ServiceResponse<LoginType>({ status: Codes.Unauthorized });
 
-    return { success: true,  status: Codes.BadRequest, message: null};
+    const tokenPayload = {
+        email: user.email,
+        name: user.name,
+    }
+
+    const JWT_SECRET= process.env['JWT_SECRET'] as string;
+
+    if(!JWT_SECRET) return ServiceResponse<LoginType>({ status: Codes.ServerError });
+
+    const token = jwt.sign(tokenPayload, JWT_SECRET ,  { expiresIn: '1h' });
+
+    return { success: true,  status: Codes.BadRequest, message: null, data: { token: token }};
+
 }

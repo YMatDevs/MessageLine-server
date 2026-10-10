@@ -1,11 +1,11 @@
-import {bcrypt} from 'bcrypt'
-import { SALT_ROUNDS } from './constants.js'
+import {bcrypt} from 'bcrypt';
+import { SALT_ROUNDS } from './constants.js';
 
 
-export async function hashPassword(password) : Promise<string>{
+export async function hashPassword(password : string) : Promise<string>{
     return await bcrypt.hash(password , SALT_ROUNDS);
 }
 
-export async function verifyPassword (password , hashedPassword) : Promise<boolean> {
-    return await bcrypt.compare(password, hashPassword);
+export async function verifyPassword (password : string , hashedPassword : string) : Promise<boolean> {
+    return await bcrypt.compare(password, hashedPassword);
 }
