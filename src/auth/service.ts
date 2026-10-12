@@ -3,14 +3,14 @@ import { LoginSchema } from "./schema.js";
 import type { ServiceResponseInterface } from "../utilities/types.js";
 import { Codes } from "../utilities/constants.js";
 import { verifyPassword } from "../utilities/auth.js";
-import { get } from "../users/repository.js";
+import { UserRepository } from "../users/repository.js";
 import jwt from 'jsonwebtoken';
 import { ServiceResponse } from "../utilities/service.js";
 
 
 type LoginType = { token: string };
 
-async function Login(userRequest: object): Promise<ServiceResponseInterface<LoginType>>  {
+export async function loginService(userRequest: object): Promise<ServiceResponseInterface<LoginType>>  {
 
     const credentials = safeParse(LoginSchema, userRequest);
 
@@ -18,7 +18,7 @@ async function Login(userRequest: object): Promise<ServiceResponseInterface<Logi
 
     const userCredentials = credentials.output;
 
-    const [user] = await get.byEmail(userCredentials.email);
+    const [user] = await UserRepository.get.byEmail(userCredentials.email);  
 
     if(!user) return ServiceResponse<LoginType>({ status: Codes.Unauthorized });
     
@@ -37,6 +37,5 @@ async function Login(userRequest: object): Promise<ServiceResponseInterface<Logi
 
     const token = jwt.sign(tokenPayload, JWT_SECRET ,  { expiresIn: '1h' });
 
-    return { success: true,  status: Codes.BadRequest, message: null, data: { token: token }};
-
+    return ServiceResponse({ status: Codes.Success, success: true, data: { token }  });
 }

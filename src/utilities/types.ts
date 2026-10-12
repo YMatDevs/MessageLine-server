@@ -4,3 +4,16 @@ export interface ServiceResponseInterface<T> {
     message: string | null ;
     data: T | null
 }
+
+
+
+export interface APIResponseInterface<T> {
+    success: boolean;
+    data: T | null;
+    error?: {
+        code: string;
+        displayMessage: string;
+        details: Record<string, any> | null;
+    }
+}
+

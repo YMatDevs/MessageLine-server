@@ -6,7 +6,8 @@ import { eq } from 'drizzle-orm';
 
 
 
-export const get = {
+
+const get = {
 
     byEmail: async (email : string) => { 
         return db.select().from(userTable).where(eq(userTable.email, email))
@@ -15,6 +16,11 @@ export const get = {
     byUserId: async (user_id: string)=> {
         return db.select().from(userTable).where(eq(userTable.user_id, user_id))
     }
+}
+
+
+export const UserRepository = {
+    get
 }
 
 
