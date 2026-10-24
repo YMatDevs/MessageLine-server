@@ -1,5 +1,5 @@
 import { safeParse } from "valibot";
-import { LoginSchema } from "./schema.js";
+import { LoginSchema, RegisterSchema } from "./schema.js";
 import type { ServiceResponseInterface } from "../utilities/types.js";
 import { Codes } from "../utilities/constants.js";
 import { verifyPassword } from "../utilities/auth.js";
@@ -38,4 +38,16 @@ export async function loginService(userRequest: object): Promise<ServiceResponse
     const token = jwt.sign(tokenPayload, JWT_SECRET ,  { expiresIn: '1h' });
 
     return ServiceResponse({ status: Codes.Success, success: true, data: { token }  });
+}
+
+export async function registerService(userRequest: object): Promise<ServiceResponseInterface<null>> {
+
+    const registrationData = safeParse(RegisterSchema, userRequest);
+
+    if(!registrationData.success) return ServiceResponse<null>({status: Codes.BadRequest});
+
+    const userRegistrationData = registrationData.output;
+
+    return ServiceResponse<null>({status: Codes.Success , success: true});
+    
 }
