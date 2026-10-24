@@ -9,6 +9,7 @@ export interface ServiceResponseInterface<T> {
 
 export interface APIResponseInterface<T> {
     success: boolean;
+    message: string | null;
     data: T | null;
     error?: {
         code: string;

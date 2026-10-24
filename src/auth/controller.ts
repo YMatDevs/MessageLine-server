@@ -43,3 +43,4 @@ router.post('/login', async (req: Request, res: Response): Promise<Response<APIR
 
 // change password
 
+export default router;

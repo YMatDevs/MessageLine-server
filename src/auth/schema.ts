@@ -9,6 +9,10 @@ const PasswordSchema = pipe(
     regex(/[!@#$%^&*]/, "Password must contain atleast one special character"),
 );
 
+const PasswordSchema = strictObject({
+    password: pipe(string(), minLength(8, ""), maxLength(20, ""))
+})
+
 export const LoginSchema = strictObject({
     email: pipe(string(), email("")),
     password: PasswordSchema,
