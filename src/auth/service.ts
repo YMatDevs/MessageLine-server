@@ -14,7 +14,7 @@ export async function loginService(userRequest: object): Promise<ServiceResponse
 
     const credentials = safeParse(LoginSchema, userRequest);
 
-    if(!credentials.success) return ServiceResponse<LoginType>({ status: Codes.BadRequest }) 
+    if(!credentials.success) return ServiceResponse<LoginType>({ status: Codes.BadRequest, message: "Invalid format" }) 
 
     const userCredentials = credentials.output;
 

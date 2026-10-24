@@ -20,7 +20,10 @@ router.post('/login', async (req: Request, res: Response): Promise<Response<APIR
 
 
     const {status, message, success, data } = await loginService({ email, password })
-    .catch(() => ({ status: Codes.ServerError, success: false, message: "An error has occured", data: null }));
+    .catch((err) => {
+        console.log(err);
+        return { status: Codes.ServerError, success: false, message: "An error has occured", data: null };
+    });
 
     if(success) {
         res.cookie(AUTH_COOKIE_NAME, data!.token, COOKIE_OPTIONS);

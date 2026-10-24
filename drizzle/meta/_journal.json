@@ -8,6 +8,13 @@
       "when": 1791226537816,
       "tag": "0000_bent_pretty_boy",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1792833458121,
+      "tag": "0001_right_stryfe",
+      "breakpoints": true
     }
   ]
 }
