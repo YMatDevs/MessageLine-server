@@ -16,7 +16,8 @@
     "dev": "nodemon --exec tsx src/app.ts",
     "build": "tsc",
     "start": "node dist/app.js",
-    "test": "vitest"
+    "test": "vitest",
+    "seed": "tsx seeds/seed.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

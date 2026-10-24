@@ -15,6 +15,13 @@
       "when": 1792833458121,
       "tag": "0001_right_stryfe",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792842578500,
+      "tag": "0002_panoramic_impossible_man",
+      "breakpoints": true
     }
   ]
 }

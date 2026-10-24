@@ -7,7 +7,6 @@ import { loginService } from './service.js';
 
 import { AUTH_COOKIE_NAME, COOKIE_OPTIONS } from '../config.js';
 import type { APIResponseInterface } from '../utilities/types.js';
-import { Codes } from '../utilities/constants.js';
 
 
 
@@ -20,10 +19,6 @@ router.post('/login', async (req: Request, res: Response): Promise<Response<APIR
 
 
     const {status, message, success, data } = await loginService({ email, password })
-    .catch((err) => {
-        console.log(err);
-        return { status: Codes.ServerError, success: false, message: "An error has occured", data: null };
-    });
 
     if(success) {
         res.cookie(AUTH_COOKIE_NAME, data!.token, COOKIE_OPTIONS);
