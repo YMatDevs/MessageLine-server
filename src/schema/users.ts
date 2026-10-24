@@ -32,4 +32,3 @@ export const pendingRegistrationTable = pgTable("pending_registrations", {
 });
 
 
-

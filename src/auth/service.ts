@@ -6,6 +6,7 @@ import { verifyPassword } from "../utilities/auth.js";
 import { UserRepository } from "../users/repository.js";
 import jwt from 'jsonwebtoken';
 import { ServiceResponse } from "../utilities/service.js";
+import { JWT_OPTIONS } from "../config.js";
 
 
 type LoginType = { token: string };
@@ -35,7 +36,7 @@ export async function loginService(userRequest: object): Promise<ServiceResponse
 
     if(!JWT_SECRET) return ServiceResponse<LoginType>({ status: Codes.ServerError });
 
-    const token = jwt.sign(tokenPayload, JWT_SECRET ,  { expiresIn: '1h' });
+    const token = jwt.sign(tokenPayload, JWT_SECRET , JWT_OPTIONS);
 
     return ServiceResponse({ status: Codes.Success, success: true, data: { token }  });
 }
