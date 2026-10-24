@@ -49,6 +49,13 @@ export async function registerService(userRequest: object): Promise<ServiceRespo
 
     const userRegistrationData = registrationData.output;
 
+    const [user] = await UserRepository.get.byEmail(userRegistrationData.email);
+    
+    if(user) return ServiceResponse<null>({status: Codes.Conflict});
+
+    
+
+
     return ServiceResponse<null>({status: Codes.Success , success: true});
     
 }
