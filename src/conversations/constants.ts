@@ -1,0 +1,5 @@
+
+export const MAX_MEMBERS_IN_DIRECT_CONVERSATION = 2;
+
+export const MIN_CONVERSATION_NAME_LENGTH = 3;  
+

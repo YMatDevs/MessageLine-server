@@ -1,10 +1,11 @@
 import {pgTable, uuid, varchar, timestamp, pgEnum, primaryKey } from "drizzle-orm/pg-core";
 import { userTable } from "./users.js";
+import { RLS_POLICY } from "./config/policy.js";
 
-export const conversationDetails = pgTable("groups" , {
+
+export const conversationDetailsTable = pgTable("groups" , {
     conversation_id: uuid("conversation_id").primaryKey(),
-
-    
+ 
     name: varchar("name", { length: 256 }).notNull(),
     description: varchar("description", { length: 256 }).notNull(),
 
@@ -24,7 +25,11 @@ export const conversationTable = pgTable("conversations" , {
 
     created_at: timestamp("created_at").notNull().defaultNow(),
     updated_at: timestamp("updated_at").notNull().defaultNow()
-});
+}, 
+    () => [
+        RLS_POLICY
+    ]
+);
 
 export const conversationParticipantTable = pgTable("conversation_participants" , {
     conversation_id: uuid("conversation_id").notNull().references(() => conversationTable.conversation_id),
@@ -33,9 +38,6 @@ export const conversationParticipantTable = pgTable("conversation_participants" 
 
     joined_at: timestamp("joined_at").notNull().defaultNow(),
 
-
-    created_at: timestamp("created_at").notNull().defaultNow(),
-    updated_at: timestamp("updated_at").notNull().defaultNow()
 },
 (table) => [
     primaryKey({

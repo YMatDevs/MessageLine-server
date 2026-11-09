@@ -1,7 +1,7 @@
 
 import { db } from '../db.js';
 import { userTable } from '../schema/users.js';
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 
 
 
@@ -16,8 +16,9 @@ export const UserRepository = {
         return db.select().from(userTable).where(eq(userTable.email, email))
     },
 
-    byUserId: async (user_id: string)=> {
-        return db.select().from(userTable).where(eq(userTable.user_id, user_id))
+    byUserIds: async (user_ids: string[]) => {
+        if(user_ids.length === 0) return [];
+        return db.select().from(userTable).where(inArray(userTable.user_id, user_ids));
     }
     }
 }

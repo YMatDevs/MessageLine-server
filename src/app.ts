@@ -15,12 +15,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'))
 
-app.use('/api/auth', authRouter);
-app.use('/api/conversations', conversationsRouter);
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/conversations', conversationsRouter);
 
 
 
 // Error Boundary 
-// app.use(errorBoundary);
+app.use(errorBoundary);
 
 app.listen(3000, () => console.log("This server is running on port 3000"));
