@@ -1,4 +1,4 @@
-export const Codes = {
+export const StatusCodes = {
 
     // Client Errors
     BadRequest: 400,
@@ -14,4 +14,4 @@ export const Codes = {
     // Successes
     Success: 200,
     Created: 201,
-}
+} as const;

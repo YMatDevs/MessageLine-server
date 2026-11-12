@@ -1,26 +1,36 @@
 import { Router } from "express";
-import type { APIResponseInterface } from "../utilities/types.js";
+import type { APIResponse } from "../utilities/types.js";
 import type { Request, Response } from "express";
 import { createConversations, listService } from "./service.js";
+import authBoundary from "../middlewre/authBoundary.js";
+import type { Conversation } from "./types.js";
+import { StatusCodes } from "../utilities/constants.js";
 
 
 const router = Router();
 
 
-router.get('/',  async (req: Request, res: Response): Promise<Response<APIResponseInterface<null>>> => {
+router.get('/', authBoundary,  async (req: Request, res: Response): APIResponse<
+    Conversation[]
+> => {
 
-    const { success, data, status, message } = await listService();
+    const { data, message } = await listService();
 
-    return res.status(status).json({ success, message, data });
+    return res.status(StatusCodes.Success).json({ success: true, message, data });
 });
 
-router.post('/', async (req: Request, res: Response): Promise<Response<APIResponseInterface<null>>> => {
+
+
+
+router.post('/', authBoundary,  async (req: Request, res: Response): APIResponse<
+    null
+> => {
 
     const { users, conversation_name, description } = req.body;
 
-    const { status, message } = await createConversations({ users, conversation_name, description });
+    const { message } = await createConversations({ users, conversation_name, description });
 
-    return res.status(status).json({ message });
+    return res.status(StatusCodes.Created).json({ success: true, message });
     
 });
 

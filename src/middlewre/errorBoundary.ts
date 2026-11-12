@@ -1,29 +1,19 @@
 import type { ErrorRequestHandler } from "express";
-import { Codes } from "../utilities/constants.js";
+
+import { APIError, InternalServerError } from "../utilities/error.js";
 
 
 export const errorBoundary: ErrorRequestHandler = (error, req, res, next) => {
 
+    console.error("Error Boundary triggered");
+    console.error(error);
 
-    const message = error.message;
-    const stackTrace = error.stack;
+    if(error instanceof APIError) return error.sendResponse(res);
 
-    const format = `
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    🚨 ERROR
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    Message: ${message}
+    const internalServerError = new InternalServerError("Something went wrong, please try again later");
 
-    Method:  ${req.method}
-    URL:     ${req.originalUrl}
+    
 
-    Stack Trace:
-    ${stackTrace}
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    `;
+    return internalServerError.sendResponse(res);
 
-    console.error(format);
-
-
-    res.status(Codes.ServerError).json({ success: false, message: "An error has occured" });
 }

@@ -1,25 +1,37 @@
 import { safeParse } from "valibot";
 import { UserRepository } from "../users/repository.js";
-import { Codes } from "../utilities/constants.js";
-import { ServiceResponse } from "../utilities/service.js";
-import type { ServiceResponseInterface } from "../utilities/types.js";
+import type { ServiceResponse, StatusCode } from "../utilities/types.js";
 import { ConversationRepository } from "./repository.js";
 import type { Conversation, ConversationType, CreateConversationInput } from "./types.js";
 import { NewConversationSchema } from "./schema.js";
+import { BadRequest, InternalServerError, Unprocessible } from "../utilities/error.js";
+import { StatusCodes } from "../utilities/constants.js";
 
-export async function listService(): Promise<ServiceResponseInterface<Conversation[]>> {
+export async function listService(): ServiceResponse<
+    typeof StatusCodes.Success, 
+    Conversation[]
+> {
 
+    const converstionList = await ConversationRepository.list()
+    .catch((err: Error) =>  { 
+        console.error(err);
+        throw new InternalServerError("Query Failed") 
+    });
 
-    const converstionList = await ConversationRepository.list();
-
-    return ServiceResponse<Conversation[]>({ status: Codes.Success, success: true, data: converstionList });
+    return { 
+        status: StatusCodes.Success, 
+        message: "Retrieved conversation list",
+        data: converstionList 
+    };
 }
 
 
 
 
-export async function createConversations( new_conversation_input : CreateConversationInput): Promise<ServiceResponseInterface<null>> {
-
+export async function createConversations( new_conversation_input : CreateConversationInput): ServiceResponse<
+    typeof StatusCodes.Created,
+    null
+> {
     // Parse request body
     const new_conversation = (() => {
         const { output, success } = safeParse(NewConversationSchema, new_conversation_input);
@@ -27,15 +39,8 @@ export async function createConversations( new_conversation_input : CreateConver
         return output;
     })();
 
-    console.log("PARTIAL11");
-
     // If parsing fails then return bad req
-    if(null === new_conversation) return ServiceResponse<null>({
-        status: Codes.BadRequest,
-        message: "Invalid format",
-    });
-
-    console.log("PARTIAL");
+    if(null === new_conversation) throw new BadRequest("Invalid Format");
 
 
     // Parse Valid User List
@@ -49,16 +54,17 @@ export async function createConversations( new_conversation_input : CreateConver
 
         const allUsersAreValid = valid_users.size === new_conversation.users.length;
 
-        if(!(success && allUsersAreValid)) return ServiceResponse<null>({
-            status: Codes.Unprocessible,
-            message: "Some of the users are not valid",
-        });
+        if(!(success && allUsersAreValid)) throw new Unprocessible("Some of the users are not processible");
 
     }
   
     await ConversationRepository.create(new_conversation);
 
-    return ServiceResponse<null>({ status: Codes.Created, success: true, data: null })
+    return {
+        status: StatusCodes.Created,
+        message: "Conversation created successfully",
+        data: null,
+    }
 }
 
 

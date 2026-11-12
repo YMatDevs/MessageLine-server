@@ -1,61 +1,68 @@
 import { safeParse } from "valibot";
 import { LoginSchema, RegisterSchema } from "./schema.js";
-import type { ServiceResponseInterface } from "../utilities/types.js";
-import { Codes } from "../utilities/constants.js";
 import { verifyPassword } from "../utilities/auth.js";
 import { UserRepository } from "../users/repository.js";
 import jwt from 'jsonwebtoken';
-import { ServiceResponse } from "../utilities/service.js";
 import { JWT_OPTIONS } from "../config.js";
+import { BadRequest, InternalServerError, Unauthorized } from "../utilities/error.js";
+import type { AuthTokenPayload, ServiceResponse } from "../utilities/types.js";
+import { StatusCodes } from "../utilities/constants.js";
 
 
-type LoginType = { token: string };
-
-export async function loginService(userRequest: object): Promise<ServiceResponseInterface<LoginType>>  {
+export async function loginService(userRequest: object): ServiceResponse<
+    typeof StatusCodes.Success,
+    { token: string }
+> {
 
     const credentials = safeParse(LoginSchema, userRequest);
 
-    if(!credentials.success) return ServiceResponse<LoginType>({ status: Codes.BadRequest, message: "Invalid format" }) 
+    if(!credentials.success) throw new BadRequest("Invalid Format");
 
     const userCredentials = credentials.output;
 
     const [user] = await UserRepository.get.byEmail(userCredentials.email);  
 
-    if(!user) return ServiceResponse<LoginType>({ status: Codes.Unauthorized });
+    if(!user) throw new Unauthorized("Invalid credentials") 
     
     const isPasswordCorrect = await verifyPassword(userCredentials.password,user.password);
     
-    if(!isPasswordCorrect) return ServiceResponse<LoginType>({ status: Codes.Unauthorized });
+    if(!isPasswordCorrect) throw new Unauthorized("Invalid credentials");
 
-    const tokenPayload = {
+    const tokenPayload: AuthTokenPayload = {
         email: user.email,
         name: user.name,
+        user_id: user.user_id,
     }
 
     const JWT_SECRET= process.env['JWT_SECRET'] as string;
 
-    if(!JWT_SECRET) return ServiceResponse<LoginType>({ status: Codes.ServerError });
+    if(!JWT_SECRET) throw new InternalServerError("Something went wrong, try again later");
 
     const token = jwt.sign(tokenPayload, JWT_SECRET , JWT_OPTIONS);
 
-    return ServiceResponse({ status: Codes.Success, success: true, data: { token }  });
+    return {
+        status: StatusCodes.Success,
+        message: "login successful",
+        data: { token: token }
+    }
 }
 
-export async function registerService(userRequest: object): Promise<ServiceResponseInterface<null>> {
 
-    const registrationData = safeParse(RegisterSchema, userRequest);
+// export async function registerService(userRequest: object): Promise<ServiceResponseInterface<null>> {
 
-    if(!registrationData.success) return ServiceResponse<null>({status: Codes.BadRequest});
+//     const registrationData = safeParse(RegisterSchema, userRequest);
 
-    const userRegistrationData = registrationData.output;
+//     if(!registrationData.success) return ServiceResponse<null>({status: Codes.BadRequest});
 
-    const [user] = await UserRepository.get.byEmail(userRegistrationData.email);
+//     const userRegistrationData = registrationData.output;
+
+//     const [user] = await UserRepository.get.byEmail(userRegistrationData.email);
     
-    if(user) return ServiceResponse<null>({status: Codes.Conflict});
+//     if(user) return ServiceResponse<null>({status: Codes.Conflict});
 
     
 
 
-    return ServiceResponse<null>({status: Codes.Success , success: true});
+//     return ServiceResponse<null>({status: Codes.Success , success: true});
     
-}
+// }
