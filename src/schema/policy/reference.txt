@@ -1,0 +1,1 @@
+CommandUSING (Existing Rows)WITH CHECK (New / Modified Rows)SELECTYes (which rows can be read)—INSERT—Yes (which rows can be created)UPDATEYes (which rows can be targeted)Yes (what the row can look like after update)DELETEYes (which rows can be deleted)—ALLYesYes

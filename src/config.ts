@@ -1,4 +1,8 @@
 import type { CookieOptions } from "express";
+import 'dotenv/config';
+
+export const isProd = process.env['NODE_ENV'] === 'production';
+export const AppEnv = process.env['NODE_ENV'];
 
 export const SALT_ROUNDS = 10;
 

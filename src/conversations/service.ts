@@ -6,6 +6,7 @@ import type { Conversation, ConversationType, CreateConversationInput } from "./
 import { NewConversationSchema } from "./schema.js";
 import { BadRequest, InternalServerError, Unprocessible } from "../utilities/error.js";
 import { StatusCodes } from "../utilities/constants.js";
+import { GetUserId } from "../utilities/context.js";
 
 export async function listService(): ServiceResponse<
     typeof StatusCodes.Success, 
@@ -43,22 +44,20 @@ export async function createConversations( new_conversation_input : CreateConver
     if(null === new_conversation) throw new BadRequest("Invalid Format");
 
 
-    // Parse Valid User List
+    // Check if users exist or not
     {
-        const valid_users = new Set((await UserRepository.get.byUserIds(new_conversation.users)).map(user => user.user_id));
-        
-        const { success } = safeParse(NewConversationSchema, {
-            ...new_conversation,
-            users: [ ...valid_users],
-        });
+        const valid_users = (await UserRepository.get.byUserIds(new_conversation.users)).map(user => user.user_id);
 
-        const allUsersAreValid = valid_users.size === new_conversation.users.length;
-
-        if(!(success && allUsersAreValid)) throw new Unprocessible("Some of the users are not processible");
+        if(valid_users.length !== new_conversation.users.length) throw new Unprocessible("Some of the users are not processible");
 
     }
+
+    const new_convo = {
+        ...new_conversation,
+        users: [ ...new_conversation.users, GetUserId()]
+    }
   
-    await ConversationRepository.create(new_conversation);
+    await ConversationRepository.create(new_convo);
 
     return {
         status: StatusCodes.Created,
