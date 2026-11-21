@@ -1,5 +1,5 @@
 import { safeParse } from "valibot";
-import { LoginSchema, RegisterSchema } from "./schema.js";
+import { LoginSchema } from "./schema.js";
 import { verifyPassword } from "../utilities/auth.js";
 import { UserRepository } from "../users/repository.js";
 import jwt from 'jsonwebtoken';

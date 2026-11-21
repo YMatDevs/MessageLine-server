@@ -10,7 +10,7 @@ import { StatusCodes } from "../utilities/constants.js";
 const router = Router();
 
 
-router.get('/', authBoundary,  async (req: Request, res: Response): APIResponse<
+router.get('/', authBoundary,  async (_req: Request, res: Response): APIResponse<
     Conversation[]
 > => {
 

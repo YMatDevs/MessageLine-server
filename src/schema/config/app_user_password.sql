@@ -1,0 +1,2 @@
+ALTER ROLE app_user
+WITH LOGIN PASSWORD 'Password@123';

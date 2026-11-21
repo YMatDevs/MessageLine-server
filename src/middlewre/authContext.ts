@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import { Unauthorized } from "../utilities/error.js";
 import { requestContext, type RequestContext } from "../utilities/context.js";
 
-export default function authContext(req :Request, res: Response, next: NextFunction) {
+export default function authContext(_req: Request, res: Response, next: NextFunction) {
 
 
     const context = res.locals['context'];

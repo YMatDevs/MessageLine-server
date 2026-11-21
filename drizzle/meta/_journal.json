@@ -47,15 +47,36 @@
     {
       "idx": 6,
       "version": "7",
-      "when": 1794652958663,
-      "tag": "0006_conversation_rls_policy",
+      "when": 1795253199424,
+      "tag": "0006_custom_functions",
       "breakpoints": true
     },
     {
       "idx": 7,
       "version": "7",
-      "when": 1794653890623,
-      "tag": "0007_conversation_rls_p2",
+      "when": 1795268260844,
+      "tag": "0007_fantastic_human_torch",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1795268312755,
+      "tag": "0008_conversation_rls",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1795271274911,
+      "tag": "0009_app_user_permissions",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1795271537932,
+      "tag": "0010_app_user_passsword",
       "breakpoints": true
     }
   ]

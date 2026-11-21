@@ -5,7 +5,7 @@ import { InternalServerError, Unauthorized } from "../utilities/error.js";
 import { requestContext, type RequestContext } from "../utilities/context.js";
 
 
-export default function authBoundary(req :Request, res: Response, next: NextFunction) {
+export default function authBoundary(req: Request, _res: Response, next: NextFunction) {
 
     const auth_cookie = req.cookies[AUTH_COOKIE_NAME];
 

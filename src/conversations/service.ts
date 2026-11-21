@@ -1,8 +1,8 @@
 import { safeParse } from "valibot";
 import { UserRepository } from "../users/repository.js";
-import type { ServiceResponse, StatusCode } from "../utilities/types.js";
+import type { ServiceResponse } from "../utilities/types.js";
 import { ConversationRepository } from "./repository.js";
-import type { Conversation, ConversationType, CreateConversationInput } from "./types.js";
+import type { Conversation, CreateConversationInput } from "./types.js";
 import { NewConversationSchema } from "./schema.js";
 import { BadRequest, InternalServerError, Unprocessible } from "../utilities/error.js";
 import { StatusCodes } from "../utilities/constants.js";
@@ -65,7 +65,6 @@ export async function createConversations( new_conversation_input : CreateConver
         data: null,
     }
 }
-
 
 
 

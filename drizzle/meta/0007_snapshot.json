@@ -1,6 +1,6 @@
 {
-  "id": "8677bd35-6807-45b3-9df0-f1e09999d97e",
-  "prevId": "751e781b-1ac0-42c7-ac23-f452341f30b2",
+  "id": "fe0e7ad1-5bea-46a1-9433-083f99c358ab",
+  "prevId": "7aa951d8-56e4-40f2-b955-4b86bec9746f",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -73,10 +73,10 @@
       "uniqueConstraints": {
         "pending_registrations_email_unique": {
           "name": "pending_registrations_email_unique",
+          "nullsNotDistinct": false,
           "columns": [
             "email"
-          ],
-          "nullsNotDistinct": false
+          ]
         }
       },
       "policies": {},
@@ -133,10 +133,10 @@
       "uniqueConstraints": {
         "users_email_unique": {
           "name": "users_email_unique",
+          "nullsNotDistinct": false,
           "columns": [
             "email"
-          ],
-          "nullsNotDistinct": false
+          ]
         }
       },
       "policies": {},
@@ -203,28 +203,28 @@
         "conversation_participants_conversation_id_conversations_conversation_id_fk": {
           "name": "conversation_participants_conversation_id_conversations_conversation_id_fk",
           "tableFrom": "conversation_participants",
+          "tableTo": "conversations",
           "columnsFrom": [
             "conversation_id"
           ],
-          "tableTo": "conversations",
           "columnsTo": [
             "conversation_id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "no action",
+          "onUpdate": "no action"
         },
         "conversation_participants_user_id_users_user_id_fk": {
           "name": "conversation_participants_user_id_users_user_id_fk",
           "tableFrom": "conversation_participants",
+          "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],
-          "tableTo": "users",
           "columnsTo": [
             "user_id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
@@ -286,15 +286,15 @@
         "conversations_created_by_users_user_id_fk": {
           "name": "conversations_created_by_users_user_id_fk",
           "tableFrom": "conversations",
+          "tableTo": "users",
           "columnsFrom": [
             "created_by"
           ],
-          "tableTo": "users",
           "columnsTo": [
             "user_id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -346,28 +346,28 @@
         "messages_conversation_id_conversations_conversation_id_fk": {
           "name": "messages_conversation_id_conversations_conversation_id_fk",
           "tableFrom": "messages",
+          "tableTo": "conversations",
           "columnsFrom": [
             "conversation_id"
           ],
-          "tableTo": "conversations",
           "columnsTo": [
             "conversation_id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "no action",
+          "onUpdate": "no action"
         },
         "messages_sender_id_users_user_id_fk": {
           "name": "messages_sender_id_users_user_id_fk",
           "tableFrom": "messages",
+          "tableTo": "users",
           "columnsFrom": [
             "sender_id"
           ],
-          "tableTo": "users",
           "columnsTo": [
             "user_id"
           ],
-          "onUpdate": "no action",
-          "onDelete": "no action"
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -388,10 +388,17 @@
     }
   },
   "schemas": {},
-  "views": {},
   "sequences": {},
-  "roles": {},
+  "roles": {
+    "app_user": {
+      "name": "app_user",
+      "createDb": false,
+      "createRole": false,
+      "inherit": false
+    }
+  },
   "policies": {},
+  "views": {},
   "_meta": {
     "columns": {},
     "schemas": {},
