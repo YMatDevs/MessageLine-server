@@ -16,7 +16,7 @@ export default function authBoundary(req :Request, res: Response, next: NextFunc
 
     const auth_payload = jwt.verify(auth_cookie, secret);
 
-    if(auth_payload === "string") throw new Unauthorized("Token not present in cookie");
+    if(typeof auth_payload === typeof "string") throw new Unauthorized("Token not present in cookie");
 
     const store: RequestContext = {
         user_id: (auth_payload as RequestContext).user_id,
