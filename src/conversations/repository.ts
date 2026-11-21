@@ -1,4 +1,5 @@
 
+import { eq } from "drizzle-orm";
 import { RlsTransaction } from "../schema/config/rls-transaction.js";
 import { conversationDetailsTable, conversationParticipantTable, conversationTable } from "../schema/conversation.js"
 import { GetUserId } from "../utilities/context.js";
@@ -16,6 +17,12 @@ type NewConversation = {
 
 
 export const ConversationRepository = {
+
+    get: async(conversationId : string) => RlsTransaction<Conversation | null >(async (transaction) => {
+        const [ conversation ] = await transaction.select().from(conversationTable).where(eq(conversationTable.conversation_id , conversationId));
+        if(conversation) return conversation;
+        return null;
+    }),
     
     list: async () => RlsTransaction<ConversationList>(async (transaction) => {
             return transaction.select().from(conversationTable);

@@ -5,6 +5,7 @@ import express from "express";
 
 import authRouter from './auth/controller.js';
 import conversationsRouter from './conversations/controller.js';
+import messageRouter from './messages/controller.js';
 
 import morgan from 'morgan';
 import { errorBoundary } from './middlewre/errorBoundary.js';
@@ -19,6 +20,7 @@ app.use(cookieParser());
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/conversations', conversationsRouter);
+app.use('/api/v1/messages', messageRouter);
 
 
 
