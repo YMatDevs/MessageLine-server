@@ -13,6 +13,7 @@ TO app_user
 USING (
     messages.conversation_id = ANY(get_conversations())
 );
+
 -- UPDATE
 CREATE POLICY rls_message_update
 ON messages

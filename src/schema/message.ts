@@ -1,10 +1,12 @@
-import {pgTable, uuid, timestamp } from "drizzle-orm/pg-core";
+import {pgTable, uuid, timestamp ,varchar } from "drizzle-orm/pg-core";
 import { userTable } from "./users.js";
 import { conversationTable } from "./conversation.js";
 
 
 export const messageTable = pgTable("messages" , {
     message_id: uuid("message_id").defaultRandom().primaryKey(),
+
+    message: varchar("messsage"),
     
     conversation_id: uuid("conversation_id").notNull().references(() => conversationTable.conversation_id),
 

@@ -12,10 +12,19 @@ type NewMessage = {
 }
 
 export const MessageRepository = {
+
+    get: async(messageId : string) => RlsTransaction<Message | null>(async (transaction) => {
+
+        const [messageList] = await transaction.select().from(messageTable).where(eq(messageTable.message_id ,messageId)).limit(1);
+        if(messageList) return messageList;
+        return null;
+    }),
     
-    get: async (conversationId : string) => RlsTransaction<MessageList>(async (transaction) => {
+    
+    getAll: async (conversationId : string) => RlsTransaction<MessageList>(async (transaction) => {
         return transaction.select().from(messageTable).where(eq(messageTable.conversation_id ,conversationId));
     }),
+
 
     create: async (message: NewMessage) => RlsTransaction<void>(async (transaction) => {
 
@@ -28,6 +37,20 @@ export const MessageRepository = {
         await transaction.insert(messageTable).values(messageType).returning();
         
         
-    })
+    }),
+
     
+    delete: async (messageId : string) => RlsTransaction<void>(async (transaction) => {
+
+        await transaction.delete(messageTable).where(eq(messageTable.message_id , messageId));
+    }),
+
+    
+    update: async (messageId : string , messageData : string) => RlsTransaction<void>(async (transaction) =>{
+
+        await transaction.update(messageTable).set({message : messageData}).where(eq(messageTable.message_id , messageId));
+
+        
+
+    })
 }

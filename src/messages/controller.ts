@@ -5,7 +5,7 @@ import authBoundary from "../middlewre/authBoundary.js";
 import type { APIResponse } from "../utilities/types.js";
 import type { Message } from "./types.js";
 import { StatusCodes } from "../utilities/constants.js";
-import { createMessage, getMessages } from "./service.js";
+import { createMessage, deleteMessage, getMessages, updateMessage } from "./service.js";
 
 const router = Router();
 
@@ -30,6 +30,29 @@ router.post('/' , authBoundary , async( req : Request , res : Response) : APIRes
     return res.status(StatusCodes.Success).json({ success: true, message });
 
     
+})
+
+
+router.delete('/' , authBoundary , async ( req : Request , res : Response) : APIResponse<null> =>{
+
+    const { messageId } = req.body;
+
+    const { message } = await deleteMessage(messageId);
+ 
+    return res.status(StatusCodes.Success).json({ success: true , message});
+})
+
+
+router.patch('/' , authBoundary , async ( req : Request , res : Response ) : APIResponse<null> =>{
+
+
+    const {message_id , messageData } = req.body;
+
+    const { message } = await updateMessage(message_id , messageData) ;
+
+    
+
+    return res.status(StatusCodes.Success).json({success : true , message });
 })
 
 export default router;
