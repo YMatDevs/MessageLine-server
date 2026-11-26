@@ -45,7 +45,7 @@ USING (
     conversations.conversation_id = ANY(get_conversations())
 )
 WITH CHECK (
-    conversation_id = ANY(get_conversations())
+    conversations.conversation_id = ANY(get_conversations())
 );
 
 -- DELETE
@@ -63,5 +63,5 @@ ON conversations
 FOR INSERT
 TO app_user
 WITH CHECK (
-    conversations.created_by = current_setting('app.user_id', true)::uuid
+    TRUE
 );

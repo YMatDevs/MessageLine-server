@@ -2,7 +2,10 @@ import { strictObject, uuid, array, trim, string, pipe, optional, forward, check
 import { getConversationType } from './utils.js';
 import { MIN_CONVERSATION_NAME_LENGTH } from './constants.js';
 
-export const NewConversationSchema = pipe(
+
+
+
+const NewConversationSchema = pipe(
     strictObject({
         users: pipe(
             array(pipe(string(), uuid())),
@@ -49,3 +52,53 @@ export const NewConversationSchema = pipe(
         }
     })
 );
+
+
+const ConversationIdSchema = pipe(string(), uuid());
+
+
+const DeleteBodySchema = pipe(
+    strictObject({
+        conversation_ids: array(ConversationIdSchema)
+    }),
+    transform((input) => [ ...input.conversation_ids ]),
+    transform((input) => [ ...new Set(input) ])
+);
+
+
+
+const AddUserBodySchema = pipe(
+    strictObject({
+        conversation_id: pipe(string(), uuid()),
+        user_ids: array(pipe(string(), uuid()))
+    }),
+    transform((input) => ({
+        conversation_id: input.conversation_id,
+        user_ids: [...new Set(input.user_ids)]
+    }))
+);
+
+const RemoveUserBodySchema = pipe(
+    strictObject({
+        conversation_id: pipe(string(), uuid()),
+        user_ids: array(pipe(string(), uuid()))
+    }),
+    transform((input) => 
+        ({
+            conversation_id: input.conversation_id,
+            user_ids: [ ...new Set(input.user_ids) ]
+        })
+    )
+)
+
+
+export default {
+    conversation: {
+        add: NewConversationSchema,
+        delete: DeleteBodySchema,
+    },
+    participant: {
+        add: AddUserBodySchema,
+        delete: RemoveUserBodySchema,
+    }
+}

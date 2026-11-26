@@ -14,4 +14,7 @@ export const StatusCodes = {
     // Successes
     Success: 200,
     Created: 201,
+    Accepted: 202,
+    NoContent: 204,
+    MultiStatus: 207,
 } as const;

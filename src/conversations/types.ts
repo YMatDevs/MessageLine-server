@@ -11,3 +11,19 @@ export type CreateConversationInput = {
     conversation_name?: string;
     description?: string;
 }
+
+
+export type DeleteConversationBody = {
+    conversation_ids: string[];
+}
+
+export type AddUserBody = {
+    conversation_id: string;
+    user_ids: string[];
+}
+
+export type RemoveUserBody = {
+    conversation_id: string;
+    user_ids: string[];
+}
+

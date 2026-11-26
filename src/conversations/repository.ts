@@ -1,9 +1,10 @@
 
-import { eq } from "drizzle-orm";
+import { eq, inArray, and } from "drizzle-orm";
 import { RlsTransaction } from "../schema/config/rls-transaction.js";
 import { conversationDetailsTable, conversationParticipantTable, conversationTable } from "../schema/conversation.js"
 import { GetUserId } from "../utilities/context.js";
 import type { Conversation, ConversationType } from "./types.js";
+import { DBError } from "../utilities/error.js";
 
 
 type ConversationList = Conversation[];
@@ -51,6 +52,29 @@ export const ConversationRepository = {
             })
         }
         
-    })
+    }),
     
+    delete: async (conversation_id: string) => RlsTransaction<Conversation>(async (transaction) => {
+        const [ conversation ] = await transaction.delete(conversationTable).where(eq(conversationTable.conversation_id, conversation_id)).returning();
+        if(!conversation) throw new DBError("Conversation does not exist");
+        return conversation;
+    }),
+
+
+    addParticipants: async (conversation_id: string, user_ids: string[]) => RlsTransaction<void>(async (transaction) => {
+
+        const rows = user_ids.map(user_id => ({ user_id: user_id, conversation_id: conversation_id }));
+
+        await transaction.insert(conversationParticipantTable).values(rows);
+    }),
+
+    removeParticipants: async (conversation_id: string, user_ids: string[]) => RlsTransaction<void>(async (transaction) => {
+
+        await transaction.delete(conversationParticipantTable).where(
+            and(
+                inArray(conversationParticipantTable.user_id, user_ids),
+                eq(conversationParticipantTable.conversation_id, conversation_id)
+            )
+        );
+    })
 }

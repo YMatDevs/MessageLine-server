@@ -1,30 +1,40 @@
 import type { Request, Response, NextFunction } from "express";
 import { AUTH_COOKIE_NAME } from "../config.js";
 import jwt from "jsonwebtoken";
+const { JsonWebTokenError, TokenExpiredError } = jwt;
 import { InternalServerError, Unauthorized } from "../utilities/error.js";
 import { requestContext, type RequestContext } from "../utilities/context.js";
 
 
 export default function authBoundary(req: Request, _res: Response, next: NextFunction) {
 
-    const auth_cookie = req.cookies[AUTH_COOKIE_NAME];
+    try {
 
-    if(!auth_cookie || auth_cookie === undefined) throw new Unauthorized("No cookie is present");
+        const auth_cookie = req.cookies[AUTH_COOKIE_NAME];
 
-    const secret = process.env['JWT_SECRET'];
-    if(!secret) throw new InternalServerError("No secret set in environment");
+        if(!auth_cookie || auth_cookie === undefined) throw new Unauthorized("No cookie is present");
 
-    const auth_payload = jwt.verify(auth_cookie, secret);
+        const secret = process.env['JWT_SECRET'];
+        if(!secret) throw new InternalServerError("No secret set in environment");
 
-    if(typeof auth_payload === typeof "string") throw new Unauthorized("Token not present in cookie");
+        const auth_payload = jwt.verify(auth_cookie, secret);
 
-    const store: RequestContext = {
-        user_id: (auth_payload as RequestContext).user_id,
-        name: (auth_payload as RequestContext).name,
-        email: (auth_payload as RequestContext).email
-    }
+        if(typeof auth_payload === typeof "string") throw new Unauthorized("Token not present in cookie");
 
-    requestContext.run(store, () => {
-        next();
-    })
+        const store: RequestContext = {
+            user_id: (auth_payload as RequestContext).user_id,
+            name: (auth_payload as RequestContext).name,
+            email: (auth_payload as RequestContext).email
+        }
+
+        requestContext.run(store, () => {
+            next();
+        })
+    } catch(error) {
+        if(error instanceof JsonWebTokenError || error instanceof TokenExpiredError ) return next(new Unauthorized("User is not logged in"));
+        
+        return next(error);
+    }  
+    
+        
 }

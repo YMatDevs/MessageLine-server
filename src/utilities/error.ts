@@ -3,6 +3,15 @@ import type { APIFailureResponse } from "./types.js";
 import type { Response } from "express";
 
 
+export class DBError extends Error {
+    #errorDetails: object | null;
+
+    constructor(message: string, errorDetails: object | null = null) {
+        super(message);
+        this.#errorDetails = errorDetails;
+    }
+}
+
 export class APIError extends Error {
 
     #status: number;
@@ -12,6 +21,7 @@ export class APIError extends Error {
         super(message);
         this.#status = status;
         this.#errorDetails = errorDetails;
+        Object.setPrototypeOf(this, new.target.prototype);
     }
 
     sendResponse(res: Response): Response<APIFailureResponse> {

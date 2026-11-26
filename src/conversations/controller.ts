@@ -1,7 +1,7 @@
 import { Router } from "express";
 import type { APIResponse } from "../utilities/types.js";
 import type { Request, Response } from "express";
-import { createConversations, listService } from "./service.js";
+import { addUsers, createConversations, deleteConversations, listService, removeUsers } from "./service.js";
 import authBoundary from "../middlewre/authBoundary.js";
 import type { Conversation } from "./types.js";
 import { StatusCodes } from "../utilities/constants.js";
@@ -33,5 +33,37 @@ router.post('/', authBoundary,  async (req: Request, res: Response): APIResponse
     return res.status(StatusCodes.Created).json({ success: true, message });
     
 });
+
+
+router.delete('/', authBoundary, async (req: Request, res: Response): APIResponse<
+    null
+> => {
+    
+    const { message } = await deleteConversations(req.body);  
+
+    return res.status(StatusCodes.NoContent).json({ success: true, message: message  });
+
+});
+
+
+router.post('/participants', authBoundary, async (req: Request, res: Response): APIResponse<
+    null
+> => {
+    
+    const { message } = await addUsers(req.body);
+
+    return res.status(StatusCodes.Created).json({ success: true, message });
+
+});
+
+router.delete('/participants', authBoundary, async (req: Request, res: Response): APIResponse<
+    null
+> => {
+
+    const { message } = await removeUsers(req.body);
+
+    return res.status(StatusCodes.NoContent).json({ success: true, message });
+
+})
 
 export default router;
