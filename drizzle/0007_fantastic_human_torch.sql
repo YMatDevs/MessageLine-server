@@ -1,1 +1,0 @@
-CREATE ROLE "app_user" WITH NOINHERIT;

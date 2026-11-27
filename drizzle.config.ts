@@ -1,6 +1,8 @@
 import 'dotenv/config';
 import { defineConfig } from 'drizzle-kit';
 
+const url = process.env['DATABASE_MIGRATION_URL'];
+if (!url) throw new Error("DATABASE_MIGRATION_URL not set");
 export default defineConfig({
   out: './drizzle',
   schema: './src/schema/index.ts',
@@ -8,7 +10,7 @@ export default defineConfig({
   verbose: true,
   strict: true,
   dbCredentials: {
-    url: process.env['DATABASE_MIGRATION_URL'],
+    url,
   },
   entities: {
     roles: {

@@ -1,2 +1,3 @@
 ALTER ROLE app_user
 WITH LOGIN PASSWORD 'Password@123';
+--> statement-breakpoint

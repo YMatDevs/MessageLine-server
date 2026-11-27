@@ -1,6 +1,6 @@
 {
-  "id": "5db348a4-c525-4235-838a-804f9718b304",
-  "prevId": "55ba02f3-aba7-4d24-ac70-a5e7b584f01e",
+  "id": "544bc9fd-a5d6-42d0-932b-834381a7c216",
+  "prevId": "9380fedb-37c0-44f3-9ec5-30774bab2526",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -52,6 +52,12 @@
           "notNull": true,
           "default": 0
         },
+        "registration_expires_at": {
+          "name": "registration_expires_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -73,10 +79,10 @@
       "uniqueConstraints": {
         "pending_registrations_email_unique": {
           "name": "pending_registrations_email_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "email"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -133,10 +139,10 @@
       "uniqueConstraints": {
         "users_email_unique": {
           "name": "users_email_unique",
-          "nullsNotDistinct": false,
           "columns": [
             "email"
-          ]
+          ],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -167,7 +173,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "groups_conversation_id_conversations_conversation_id_fk": {
+          "name": "groups_conversation_id_conversations_conversation_id_fk",
+          "tableFrom": "groups",
+          "columnsFrom": [
+            "conversation_id"
+          ],
+          "tableTo": "conversations",
+          "columnsTo": [
+            "conversation_id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "cascade"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -196,58 +216,59 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "participants_user_id_idx": {
+          "name": "participants_user_id_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
       "foreignKeys": {
         "conversation_participants_conversation_id_conversations_conversation_id_fk": {
           "name": "conversation_participants_conversation_id_conversations_conversation_id_fk",
           "tableFrom": "conversation_participants",
-          "tableTo": "conversations",
           "columnsFrom": [
             "conversation_id"
           ],
+          "tableTo": "conversations",
           "columnsTo": [
             "conversation_id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "conversation_participants_user_id_users_user_id_fk": {
           "name": "conversation_participants_user_id_users_user_id_fk",
           "tableFrom": "conversation_participants",
-          "tableTo": "users",
           "columnsFrom": [
             "user_id"
           ],
+          "tableTo": "users",
           "columnsTo": [
             "user_id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         }
       },
       "compositePrimaryKeys": {
-        "conversation_participants_conversation_id_user_id_joined_at_pk": {
-          "name": "conversation_participants_conversation_id_user_id_joined_at_pk",
+        "conversation_participants_conversation_id_user_id_pk": {
+          "name": "conversation_participants_conversation_id_user_id_pk",
           "columns": [
             "conversation_id",
-            "user_id",
-            "joined_at"
+            "user_id"
           ]
         }
       },
@@ -300,15 +321,15 @@
         "conversations_created_by_users_user_id_fk": {
           "name": "conversations_created_by_users_user_id_fk",
           "tableFrom": "conversations",
-          "tableTo": "users",
           "columnsFrom": [
             "created_by"
           ],
+          "tableTo": "users",
           "columnsTo": [
             "user_id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -327,6 +348,12 @@
           "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
+        },
+        "message": {
+          "name": "message",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
         },
         "conversation_id": {
           "name": "conversation_id",
@@ -355,33 +382,55 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "messages_conversation_created_idx": {
+          "name": "messages_conversation_created_idx",
+          "columns": [
+            {
+              "expression": "conversation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
       "foreignKeys": {
         "messages_conversation_id_conversations_conversation_id_fk": {
           "name": "messages_conversation_id_conversations_conversation_id_fk",
           "tableFrom": "messages",
-          "tableTo": "conversations",
           "columnsFrom": [
             "conversation_id"
           ],
+          "tableTo": "conversations",
           "columnsTo": [
             "conversation_id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "cascade"
         },
         "messages_sender_id_users_user_id_fk": {
           "name": "messages_sender_id_users_user_id_fk",
           "tableFrom": "messages",
-          "tableTo": "users",
           "columnsFrom": [
             "sender_id"
           ],
+          "tableTo": "users",
           "columnsTo": [
             "user_id"
           ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -402,10 +451,10 @@
     }
   },
   "schemas": {},
+  "views": {},
   "sequences": {},
   "roles": {},
   "policies": {},
-  "views": {},
   "_meta": {
     "columns": {},
     "schemas": {},

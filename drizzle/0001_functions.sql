@@ -1,7 +1,5 @@
 -- Custom SQL migration file, put your code below! --
 
-
-
 CREATE OR REPLACE FUNCTION get_conversations()
 RETURNS uuid[]
 LANGUAGE sql
@@ -15,3 +13,4 @@ AS $$
     WHERE user_id = current_setting('app.user_id', true)::uuid
   );
 $$;
+--> statement-breakpoint

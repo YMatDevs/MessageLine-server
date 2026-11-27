@@ -1,0 +1,15 @@
+-- Custom SQL migration file, put your code below! --
+GRANT USAGE ON SCHEMA public TO app_user;
+--> statement-breakpoint
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO app_user;
+--> statement-breakpoint
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO app_user;
+--> statement-breakpoint
+ALTER DEFAULT PRIVILEGES FOR ROLE neondb_owner IN SCHEMA public
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO app_user;
+--> statement-breakpoint
+ALTER DEFAULT PRIVILEGES FOR ROLE neondb_owner IN SCHEMA public
+GRANT USAGE, SELECT ON SEQUENCES TO app_user;
+--> statement-breakpoint
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO app_user;
+--> statement-breakpoint

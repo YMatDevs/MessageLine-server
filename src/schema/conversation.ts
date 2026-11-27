@@ -1,9 +1,9 @@
-import { pgTable, uuid, varchar, timestamp, pgEnum, primaryKey } from "drizzle-orm/pg-core";
+import { pgTable, uuid, varchar, timestamp, pgEnum, primaryKey, index } from "drizzle-orm/pg-core";
 import { userTable } from "./users.js";
 
 
 export const conversationDetailsTable = pgTable("groups" , {
-    conversation_id: uuid("conversation_id").primaryKey(),
+    conversation_id: uuid("conversation_id").primaryKey().references(() => conversationTable.conversation_id, { onDelete: "cascade" }),
  
     name: varchar("name", { length: 256 }).notNull(),
     description: varchar("description", { length: 256 }).notNull(),
@@ -23,20 +23,17 @@ export const conversationTable = pgTable("conversations" , {
     created_by: uuid("created_by").notNull().references(() => userTable.user_id),
 
     created_at: timestamp("created_at").notNull().defaultNow(),
-    updated_at: timestamp("updated_at").notNull().defaultNow()
+    updated_at: timestamp("updated_at").notNull().defaultNow().$onUpdate(() => new Date()),
 });
 
 export const conversationParticipantTable = pgTable("conversation_participants" , {
-    conversation_id: uuid("conversation_id").notNull().references(() => conversationTable.conversation_id),
+    conversation_id: uuid("conversation_id").notNull().references(() => conversationTable.conversation_id , { onDelete: "cascade" }),
 
-    user_id: uuid("user_id").notNull().references(() => userTable.user_id),
+    user_id: uuid("user_id").notNull().references(() => userTable.user_id , { onDelete: "cascade" }),
 
     joined_at: timestamp("joined_at").notNull().defaultNow(),
 
-},
-(table) => [
-    primaryKey({
-        columns : [table.conversation_id, table.user_id, table.joined_at]
-    }),
-]
-);
+}, (table) => [
+    primaryKey({ columns: [table.conversation_id, table.user_id] }),
+    index("participants_user_id_idx").on(table.user_id),
+]);

@@ -25,7 +25,7 @@ export const pendingRegistrationTable = pgTable("pending_registrations", {
     otp_expires_at: timestamp("otp_expires_at").notNull(),
     otp_attempts: smallint("otp_attempts").default(0).notNull(),
 
-    registration_expires_at: timestamp("otp_expires_at").notNull(),
+    registration_expires_at: timestamp("registration_expires_at").notNull(),
 
     created_at: timestamp("created_at").notNull().defaultNow(),
     updated_at: timestamp("updated_at").notNull().defaultNow()
